@@ -48,9 +48,141 @@ def ids_rids(arg1):
 
     return switch.get(arg1)
 
+
+def storeB1(x, y, vx, vy):
+    B1CX = x                    #x-value of B1 center
+    B1CY = y                    #y-value of B1 center
+    B1CVx = vx                  #x-value of B1 vector
+    B1CVy = vy                  #y-value of B1 vector
+    B1C = (x, y)                #B1 center tuple
+    B1V = (vx, vy)              #B1 vector tuple
+
+def storeB2(x, y, vx, vy):
+    B2CX = x
+    B2CY = y
+    B2CVx = vx
+    B2CVy = vy
+    B2C = (x, y)
+    B2V = (vx, vy)
+
+
+def storeB3(x, y, vx, vy):
+    B3CX = x
+    B3CY = y
+    B3CVx = vx
+    B3CVy = vy
+    B3C = (x, y)
+    B3V = (vx, vy)
+
+def storeB4(x, y, vx, vy):
+    B4CX = x
+    B4CY = y
+    B4CVx = vx
+    B4CVy = vy
+    B4C = (x, y)
+    B4V = (vx, vy)
+
+def storeS1(x, y, vx, vy):
+    S1CX = x
+    S1CY = y
+    S1CVx = vx
+    S1CVy = vy
+    S1C = (x, y)
+    S1V = (vx, vy)
+
+def storeS2(x, y, vx, vy):
+    S2CX = x
+    S2CY = y
+    S2CVx = vx
+    S2CVy = vy
+    S2C = (x, y)
+    S2V = (vx, vy)
+
+def storeS3(x, y, vx, vy):
+    S3CX = x
+    S3CY = y
+    S3CVx = vx
+    S3CVy = vy
+    S3C = (x, y)
+    S3V = (vx, vy)
+
+def storeS4(x, y, vx, vy):
+    S4CX = x
+    S4CY = y
+    S4CVx = vx
+    S4CVy = vy
+    S4C = (x, y)
+    S4V = (vx, vy)
+
+def storeD1(x, y, vx, vy):
+    D1CX = x
+    D1CY = y
+    D1CVx = vx
+    D1CVy = vy
+    D1C = (x, y)
+    D1V = (vx, vy)
+
+def storeD2(x, y, vx, vy):
+    D2CX = x
+    D2CY = y
+    D2CVx = vx
+    D2CVy = vy
+    D2C = (x, y)
+    D2V = (vx, vy)
+
+def storeD3(x, y, vx, vy):
+    D3CX = x
+    D3CY = y
+    D3CVx = vx
+    D3CVy = vy
+    D3C = (x, y)
+    D3V = (vx, vy)
+
+def storeD4(x, y, vx, vy):
+    D4CX = x
+    D4CY = y
+    D4CVx = vx
+    D4CVy = vy
+    D4C = (x, y)
+    D4V = (vx, vy)
+
+def storeT1(x, y, vx, vy):
+    T1CX = x
+    T1CY = y
+    T1CVx = vx
+    T1CVy = vy
+    T1C = (x, y)
+    T1V = (vx, vy)
+
+def storeT2(x, y, vx, vy):
+    T2CX = x
+    T2CY = y
+    T2CVx = vx
+    T2CVy = vy
+    T2C = (x, y)
+    T2V = (vx, vy)
+
+def storeT3(x, y, vx, vy):
+    T3CX = x
+    T3CY = y
+    T3CVx = vx
+    T3CVy = vy
+    T3C = (x, y)
+    T3V = (vx, vy)
+
+def storeT4(x, y, vx, vy):
+    T4CX = x
+    T4CY = y
+    T4CVx = vx
+    T4CVy = vy
+    T4C = (x, y)
+    T4V = (vx, vy)
+
+
+
 def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    key = getattr(aruco,f'DICT_{MarkerSize}X{MarkerSize}_{totalMarkers}')
+    key = getattr(aruco, f'DICT_{MarkerSize}X{MarkerSize}_{totalMarkers}')
     arucoDict = aruco.Dictionary_get(key)
     arucoParam = aruco.DetectorParameters_create()
     corners, ids, rejected = aruco.detectMarkers(imgGray, arucoDict, parameters=arucoParam)
@@ -58,7 +190,7 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
     cv2.rectangle(imgGray, (10, 10), (100, 100), color=(255, 0, 0), thickness=3)
 
     if draw:
-        aruco.drawDetectedMarkers(img,corners)
+        aruco.drawDetectedMarkers(img, corners)
 
     for (i, b) in enumerate(corners):
 
@@ -66,13 +198,15 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
         c2 = (b[0][1][0], b[0][1][1])
         c3 = (b[0][2][0], b[0][2][1])
         c4 = (b[0][3][0], b[0][3][1])
-        v = (int(c1[0])-int(c4[0]),int(c1[1])-int(c4[1]))
+        v = (int(c1[0])-int(c4[0]), int(c1[1])-int(c4[1]))
+        vx = int(c1[0]) - int(c4[0])
+        vy = int(c1[1]) - int(c4[1])
         x = int((c1[0] + c2[0] + c3[0] + c4[0]) / 4)
         y = int((c1[1] + c2[1] + c3[1] + c4[1]) / 4)
 
 
 
-        print(ids[i],v)
+        # print(ids[i], v)
         # print(c1)
         # print(c2)
         # print(c3)
@@ -82,13 +216,45 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
         arg1 = str(ids[i])
         arg2 = ids_rids(arg1)
 
-        cv2.line(img, (int(c1[0]),int(c1[1])), (int(c2[0]),int(c2[1])), (0, 255, 0), 2)
-        cv2.line(img, (int(c2[0]),int(c2[1])), (int(c3[0]),int(c3[1])), (0, 255, 0), 2)
-        cv2.line(img, (int(c3[0]),int(c3[1])), (int(c4[0]),int(c4[1])), (0, 255, 0), 2)
-        cv2.line(img, (int(c4[0]),int(c4[1])), (int(c1[0]),int(c1[1])), (0, 255, 0), 2)
-        cv2.line(img,(x,y),(x+(int(v[0])//2),y+(int(v[1])//2)),(255,0,0),2)
-        img = cv2.putText(img, arg2, (x+50, y), cv2.FONT_HERSHEY_COMPLEX,
-                            0.5, (0, 0, 255), 1, cv2.LINE_AA)
+        if arg2 == "FKMP0001":
+            storeB1(x, y, vx, vy)
+        elif arg2 == "FKMP0002":
+            storeB2(x, y, vx, vy)
+        elif arg2 == "FKMP0003":
+            storeB3(x, y, vx, vy)
+        elif arg2 == "FKMP0004":
+            storeB4(x, y, vx, vy)
+        elif arg2 == "S1":
+            storeS1(x, y, vx, vy)
+        elif arg2 == "S2":
+            storeS2(x, y, vx, vy)
+        elif arg2 == "S3":
+            storeS3(x, y, vx, vy)
+        elif arg2 == "S4":
+            storeS4(x, y, vx, vy)
+        elif arg2 == "D1":
+            storeD1(x, y, vx, vy)
+        elif arg2 == "D2":
+            storeD2(x, y, vx, vy)
+        elif arg2 == "D3":
+            storeD3(x, y, vx, vy)
+        elif arg2 == "D4":
+            storeD4(x, y, vx, vy)
+        elif arg2 == "T1":
+            storeT1(x, y, vx, vy)
+        elif arg2 == "T2":
+            storeT2(x, y, vx, vy)
+        elif arg2 == "T3":
+            storeT3(x, y, vx, vy)
+        elif arg2 == "T4":
+            storeT4(x, y, vx, vy)
+
+        cv2.line(img, (int(c1[0]), int(c1[1])), (int(c2[0]), int(c2[1])), (0, 255, 0), 2)
+        cv2.line(img, (int(c2[0]), int(c2[1])), (int(c3[0]), int(c3[1])), (0, 255, 0), 2)
+        cv2.line(img, (int(c3[0]), int(c3[1])), (int(c4[0]), int(c4[1])), (0, 255, 0), 2)
+        cv2.line(img, (int(c4[0]), int(c4[1])), (int(c1[0]), int(c1[1])), (0, 255, 0), 2)
+        cv2.line(img, (x, y), (x+(int(v[0])//2), y+(int(v[1])//2)), (255, 0, 0), 2)
+        img = cv2.putText(img, arg2, (x-10, y+20), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
 
 VIDEO_TYPE = {
@@ -114,11 +280,11 @@ def main():
         success, img = cap.read()
         findArucoMarkers(img)
         # rec.write(img)
-        cv2.imshow("Image",img)
+        cv2.imshow("Image", img)
         cv2.waitKey(1)
 
         if cv2.waitKey(20) & 0xFF == ord('q'):
-            rec.release()
+            # rec.release()
             break
 
     cap.release()
