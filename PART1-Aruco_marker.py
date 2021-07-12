@@ -2,12 +2,16 @@ import cv2
 import numpy as np
 import cv2.aruco as aruco
 import os
+import math
+from numpy import linalg
+
+
 
 filename = 'Test.avi'
 fps = 24.0
 my_res = '720p'
 BOT = "BOT1"
-p = 0
+p = 2
 
 
 B1CX = 0
@@ -74,11 +78,21 @@ T4CX = 15
 T4CY = 15
 T4CVx = 15
 T4CVy = 15
+B1V = (0, 1)
+T1V = (1, 0)
+
+
 signal = "00"
 buffer = 10
+bufferAngle = 15
 
+def unit_vector(vector):
+    return vector / np.linalg.norm(vector)
 
-
+def angle_between(v1, v2):
+    v1_u = unit_vector(v1)
+    v2_u = unit_vector(v2)
+    return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
 
 def change_res(cap, width, height):
     cap.set(3,width)
@@ -127,6 +141,7 @@ def storeB1(x, y, vx, vy):
     global B1CY
     global B1CVx
     global B1CVy
+    global B1V
     B1CX = x                    #x-value of B1 center
     B1CY = y                    #y-value of B1 center
     B1CVx = vx                  #x-value of B1 vector
@@ -140,6 +155,7 @@ def storeB2(x, y, vx, vy):
     global B2CY
     global B2CVx
     global B2CVy
+    global B2V
     B2CX = x
     B2CY = y
     B2CVx = vx
@@ -147,12 +163,12 @@ def storeB2(x, y, vx, vy):
     B2C = (x, y)
     B2V = (vx, vy)
 
-
 def storeB3(x, y, vx, vy):
     global B3CX
     global B3CY
     global B3CVx
     global B3CVy
+    global B3V
     B3CX = x
     B3CY = y
     B3CVx = vx
@@ -165,6 +181,7 @@ def storeB4(x, y, vx, vy):
     global B4CY
     global B4CVx
     global B4CVy
+    global B4V
     B4CX = x
     B4CY = y
     B4CVx = vx
@@ -273,6 +290,7 @@ def storeT1(x, y, vx, vy):
     global T1CY
     global T1CVx
     global T1CVy
+    global T1V
     T1CX = x
     T1CY = y
     T1CVx = vx
@@ -285,6 +303,7 @@ def storeT2(x, y, vx, vy):
     global T2CY
     global T2CVx
     global T2CVy
+    global T2V
     T2CX = x
     T2CY = y
     T2CVx = vx
@@ -297,6 +316,7 @@ def storeT3(x, y, vx, vy):
     global T3CY
     global T3CVx
     global T3CVy
+    global T3V
     T3CX = x
     T3CY = y
     T3CVx = vx
@@ -309,6 +329,7 @@ def storeT4(x, y, vx, vy):
     global T4CY
     global T4CVx
     global T4CVy
+    global T4V
     T4CX = x
     T4CY = y
     T4CVx = vx
@@ -322,8 +343,8 @@ def sendSignal(signal):
 
 def runLogicBOT1(img, p):
 
-
-    if(p == 0):                             ###BOT1 moving forward towards T1
+    # BOT1 moving forward towards T1
+    if(p == 0):
 
         cv2.line(img, (B1CX, B1CY), (T1CX, T1CY), (0, 255, 255), 2)
         cv2.line(img, (T1CX-buffer, T1CY-buffer), (T1CX+buffer, T1CY-buffer), (255, 255, 0), 2)
@@ -351,20 +372,88 @@ def runLogicBOT1(img, p):
             signal = "1C"                     #Backward
             sendSignal(signal)
         elif (B1CX < T1CX-buffer and B1CY > T1CY-buffer and B1CY < T1CY+buffer):
-            signal = "1J"
+            signal = "1J"                     #Backward-Left
             sendSignal(signal)
         elif (B1CX > T1CX+buffer and B1CY > T1CY-buffer and B1CY < T1CY+buffer):
-            signal = "1I"
+            signal = "1I"                     #Backward-Right
             sendSignal(signal)
-        elif(B1CX > T1CX-buffer and B1CX < T1CX+buffer and B1CY > T1CY-buffer and B1CY < T1CY+buffer):
-            signal = "1A"                    #Idle
+        elif(B1CX >= T1CX-buffer and B1CX <= T1CX+buffer and B1CY >= T1CY-buffer and B1CY <= T1CY+buffer):
+            signal = "1A"                     #Idle
             sendSignal(signal)
+            p = 1
+
+    # BOT1 moving turning at T1
+    elif(p == 1):
+        B1Vu = unit_vector(B1V)                 #Making into unit vector
+        T1Vu = unit_vector(T1V)                 #Making into unit vector
+
+        angle = angle_between(B1Vu, T1Vu)
+        angleDeg = 180 - angle*57.29577951326092812//1
+        print(angleDeg)
+
+        Ux = math.cos(math.radians(bufferAngle))*100//1
+        Uy = math.sin(math.radians(bufferAngle))*100//1
+        print(Ux, Uy)
+
+        cv2.line(img, (B1CX, B1CY), (D1CX, D1CY), (0, 255, 255), 2)
+        cv2.line(img, (B1CX, B1CY), (B1CX - int(Ux), B1CY - int(Uy)), (255, 255, 0), 2)
+        cv2.line(img, (B1CX, B1CY), (B1CX - int(Ux), B1CY + int(Uy)), (255, 255, 0), 2)
+
+
+        if(angleDeg > bufferAngle):
+            signal = "1D"                       #Turn Right
+            sendSignal(signal)
+        elif(angleDeg <= bufferAngle):
+            signal = "1A"                       #Idle
+            sendSignal(signal)
+            p = 2
+
+    # BOT1 moving forward towards D1
+    elif(p == 2):
+
+        cv2.line(img, (B1CX, B1CY), (D1CX, D1CY), (0, 255, 255), 2)
+        cv2.line(img, (D1CX - buffer, D1CY - buffer), (D1CX + buffer, D1CY - buffer), (255, 255, 0), 2)
+        cv2.line(img, (D1CX + buffer, D1CY - buffer), (D1CX + buffer, D1CY + buffer), (255, 255, 0), 2)
+        cv2.line(img, (D1CX + buffer, D1CY + buffer), (D1CX - buffer, D1CY + buffer), (255, 255, 0), 2)
+        cv2.line(img, (D1CX - buffer, D1CY + buffer), (D1CX - buffer, D1CY - buffer), (255, 255, 0), 2)
+
+        if (B1CX < D1CX - buffer and B1CY < D1CY - buffer):
+            signal = "1J"                   # Backward-Left
+            sendSignal(signal)
+        elif (B1CX > D1CX + buffer and B1CY < D1CY - buffer):
+            signal = "1H"                   # Forward-Left
+            sendSignal(signal)
+        elif (B1CX < D1CX - buffer and B1CY > D1CY + buffer):
+            signal = "1I"                   # Backward-Right
+            sendSignal(signal)
+        elif (B1CX > D1CX + buffer and B1CY > D1CY + buffer):
+            signal = "1G"                   # Forward-Right
+            sendSignal(signal)
+        elif (B1CX > D1CX - buffer and B1CX < D1CX + buffer and B1CY < D1CY - buffer):
+            signal = "1J"                   # Backward-Left
+            sendSignal(signal)
+        elif (B1CX > D1CX - buffer and B1CX < D1CX + buffer and B1CY > D1CY + buffer):
+            signal = "1I"                   # Backward-Right
+            sendSignal(signal)
+        elif (B1CX < D1CX - buffer and B1CY > D1CY - buffer and B1CY < D1CY + buffer):
+            signal = "1C"                    # Backward
+            sendSignal(signal)
+        elif (B1CX > D1CX + buffer and B1CY > D1CY - buffer and B1CY < D1CY + buffer):
+            signal = "1B"                    # Forward
+            sendSignal(signal)
+        elif (B1CX >= D1CX - buffer and B1CX <= D1CX + buffer and B1CY >= D1CY - buffer and B1CY <= D1CY + buffer):
+            signal = "1A"                    # Idle
+            sendSignal(signal)
+            p = 3
+
+    # BOT1 dropping package
+    elif(p == 3):
+
+        signal = "1F"
+        sendSignal(signal)
 
 
 
-
-    # elif(a==1):                             ###BOT1 moving turning at T1
-    #     if():
 
 
 
