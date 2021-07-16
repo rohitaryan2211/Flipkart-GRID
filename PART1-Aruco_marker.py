@@ -5,16 +5,13 @@ import os
 import math
 from numpy import linalg
 
-
-
 filename = 'Test.avi'
 fps = 24.0
 my_res = '720p'
 BOT = "BOT1"
-p = 6
 
-imgx= 0
-imgy = 0
+imgx = 1280
+imgy = 720
 
 B1CX = 0
 B1CY = 0
@@ -97,35 +94,39 @@ T2V = (0, -1)
 T3V = (0, -1)
 T4V = (0, -1)
 
-
 signal = "00"
 buffer = 10
 bufferAngle = 15
 
+
 def unit_vector(vector):
     return vector / np.linalg.norm(vector)
+
 
 def angle_between(v1, v2):
     v1_u = unit_vector(v1)
     v2_u = unit_vector(v2)
     return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
 
+
 def change_res(cap, width, height):
-    cap.set(3,width)
-    cap.set(4,height)
+    cap.set(3, width)
+    cap.set(4, height)
+
 
 STD_Dim = {
-    "480p": (640,480),
-    "720p": (1280,720),
-    "1080p": (1920,1080),
-    "4k": (3840,2160),
+    "480p": (640, 480),
+    "720p": (1280, 720),
+    "1080p": (1920, 1080),
+    "4k": (3840, 2160),
 }
+
 
 def get_dims(cap, res='720p'):
     width, height = STD_Dim['480p']
     if res in STD_Dim:
         width, height = STD_Dim[res]
-    change_res(cap, width,height)
+    change_res(cap, width, height)
     return width, height
 
 
@@ -158,13 +159,14 @@ def storeB1(x, y, vx, vy):
     global B1CVx
     global B1CVy
     global B1V
-    B1CX = x                    #x-value of B1 center
-    B1CY = y                    #y-value of B1 center
-    B1CVx = vx                  #x-value of B1 vector
-    B1CVy = vy                  #y-value of B1 vector
-    B1C = (x, y)                #B1 center tuple
-    B1V = (vx, vy)              #B1 vector tuple
+    B1CX = x  # x-value of B1 center
+    B1CY = y  # y-value of B1 center
+    B1CVx = vx  # x-value of B1 vector
+    B1CVy = vy  # y-value of B1 vector
+    B1C = (x, y)  # B1 center tuple
+    B1V = (vx, vy)  # B1 vector tuple
     # print(B1CVx, B1CVy)
+
 
 def storeB2(x, y, vx, vy):
     global B2CX
@@ -179,6 +181,7 @@ def storeB2(x, y, vx, vy):
     B2C = (x, y)
     B2V = (vx, vy)
 
+
 def storeB3(x, y, vx, vy):
     global B3CX
     global B3CY
@@ -191,6 +194,7 @@ def storeB3(x, y, vx, vy):
     B3CVy = vy
     B3C = (x, y)
     B3V = (vx, vy)
+
 
 def storeB4(x, y, vx, vy):
     global B4CX
@@ -205,6 +209,7 @@ def storeB4(x, y, vx, vy):
     B4C = (x, y)
     B4V = (vx, vy)
 
+
 def storeS1(x, y, vx, vy):
     global S1CX
     global S1CY
@@ -217,6 +222,7 @@ def storeS1(x, y, vx, vy):
     S1CVy = vy
     S1C = (x, y)
     S1V = (vx, vy)
+
 
 def storeS2(x, y, vx, vy):
     global S2CX
@@ -231,6 +237,7 @@ def storeS2(x, y, vx, vy):
     S2C = (x, y)
     S2V = (vx, vy)
 
+
 def storeS3(x, y, vx, vy):
     global S3CX
     global S3CY
@@ -243,6 +250,7 @@ def storeS3(x, y, vx, vy):
     S3CVy = vy
     S3C = (x, y)
     S3V = (vx, vy)
+
 
 def storeS4(x, y, vx, vy):
     global S4CX
@@ -257,6 +265,7 @@ def storeS4(x, y, vx, vy):
     S4C = (x, y)
     S4V = (vx, vy)
 
+
 def storeD1(x, y, vx, vy):
     global D1CX
     global D1CY
@@ -270,6 +279,7 @@ def storeD1(x, y, vx, vy):
     D1C = (x, y)
     D1V = (vx, vy)
 
+
 def storeD2(x, y, vx, vy):
     global D2CX
     global D2CY
@@ -281,6 +291,7 @@ def storeD2(x, y, vx, vy):
     D2CVy = vy
     D2C = (x, y)
     D2V = (vx, vy)
+
 
 def storeD3(x, y, vx, vy):
     global D3CX
@@ -295,6 +306,7 @@ def storeD3(x, y, vx, vy):
     D3C = (x, y)
     D3V = (vx, vy)
 
+
 def storeD4(x, y, vx, vy):
     global D4CX
     global D4CY
@@ -307,6 +319,7 @@ def storeD4(x, y, vx, vy):
     D4CVy = vy
     D4C = (x, y)
     D4V = (vx, vy)
+
 
 def storeT1(x, y, vx, vy):
     global T1CX
@@ -321,6 +334,7 @@ def storeT1(x, y, vx, vy):
     T1C = (x, y)
     T1V = (vx, vy)
 
+
 def storeT2(x, y, vx, vy):
     global T2CX
     global T2CY
@@ -333,6 +347,7 @@ def storeT2(x, y, vx, vy):
     T2CVy = vy
     T2C = (x, y)
     T2V = (vx, vy)
+
 
 def storeT3(x, y, vx, vy):
     global T3CX
@@ -347,6 +362,7 @@ def storeT3(x, y, vx, vy):
     T3C = (x, y)
     T3V = (vx, vy)
 
+
 def storeT4(x, y, vx, vy):
     global T4CX
     global T4CY
@@ -360,14 +376,14 @@ def storeT4(x, y, vx, vy):
     T4C = (x, y)
     T4V = (vx, vy)
 
+
 def sendSignal(signal):
     print(signal)
 
 
-def runLogicBOT1(img, p):
-
+def runLogicBOT1(img, p, operationNo):
     # BOT1 moving forward towards T1
-    if(p == 0):
+    if operationNo == 0:
 
         cv2.line(img, (B1CX, B1CY), (T1CX, T1CY), (0, 255, 255), 2)
         # cv2.line(img, (T1CX-buffer, T1CY-buffer), (T1CX+buffer, T1CY-buffer), (255, 255, 0), 2)
@@ -380,64 +396,82 @@ def runLogicBOT1(img, p):
         cv2.line(img, (imgx, T1CY + buffer), (0, T1CY + buffer), (255, 255, 0), 2)
         cv2.line(img, (T1CX - buffer, imgy), (T1CX - buffer, 0), (255, 255, 0), 2)
 
-
-        if(B1CX < T1CX-buffer and B1CY < T1CY-buffer):
-            signal = "1H"                     #Forward-Left
+        if B1CX < T1CX - buffer and B1CY < T1CY - buffer:
+            signal = "1H"  # Forward-Left
             sendSignal(signal)
-        elif(B1CX > T1CX+buffer and B1CY < T1CY-buffer):
-            signal = "1G"                     #Forward-Right
+            p = 0
+            return p
+        if B1CX > T1CX + buffer and B1CY < T1CY - buffer:
+            signal = "1G"  # Forward-Right
             sendSignal(signal)
-        elif(B1CX < T1CX-buffer and B1CY > T1CY+buffer):
-            signal = "1J"                     #Backward-Left
+            p = 0
+            return p
+        if B1CX < T1CX - buffer and B1CY > T1CY + buffer:
+            signal = "1J"  # Backward-Left
             sendSignal(signal)
-        elif(B1CX > T1CX+buffer and B1CY > T1CY+buffer):
-            signal = "1I"                     #Backward-Right
+            p = 0
+            return p
+        if B1CX > T1CX + buffer and B1CY > T1CY + buffer:
+            signal = "1I"  # Backward-Right
             sendSignal(signal)
-        elif (B1CX > T1CX-buffer and B1CX < T1CX+buffer and B1CY < T1CY-buffer):
-            signal = "1B"                     #Forward
+            p = 0
+            return p
+        if T1CX - buffer <= B1CX <= T1CX + buffer and B1CY < T1CY - buffer:
+            signal = "1B"  # Forward
             sendSignal(signal)
-        elif (B1CX > T1CX-buffer and B1CX < T1CX+buffer and B1CY > T1CY+buffer):
-            signal = "1C"                     #Backward
+            p = 0
+            return p
+        if T1CX - buffer <= B1CX <= T1CX + buffer and B1CY > T1CY + buffer:
+            signal = "1C"  # Backward
             sendSignal(signal)
-        elif (B1CX < T1CX-buffer and B1CY > T1CY-buffer and B1CY < T1CY+buffer):
-            signal = "1J"                     #Backward-Left
+            p = 0
+            return p
+        if B1CX < T1CX - buffer and T1CY - buffer <= B1CY <= T1CY + buffer:
+            signal = "1J"  # Backward-Left
             sendSignal(signal)
-        elif (B1CX > T1CX+buffer and B1CY > T1CY-buffer and B1CY < T1CY+buffer):
-            signal = "1I"                     #Backward-Right
+            p = 0
+            return p
+        if B1CX > T1CX + buffer and T1CY - buffer <= B1CY <= T1CY + buffer:
+            signal = "1I"  # Backward-Right
             sendSignal(signal)
-        elif(B1CX >= T1CX-buffer and B1CX <= T1CX+buffer and B1CY >= T1CY-buffer and B1CY <= T1CY+buffer):
-            signal = "1A"                     #Idle
+            p = 0
+            return p
+        if T1CX - buffer <= B1CX <= T1CX + buffer and T1CY - buffer <= B1CY <= T1CY + buffer:
+            signal = "1A"  # Idle
             sendSignal(signal)
             p = 1
+            return p
 
     # BOT1 moving turning at T1 towards D1
-    elif(p == 1):
-        B1Vu = unit_vector(B1V)                 #Making into unit vector
-        D1Vu = unit_vector(D1V)                 #Making into unit vector
+    if operationNo == 1:
+        B1Vu = unit_vector(B1V)  # Making into unit vector
+        D1Vu = unit_vector(D1V)  # Making into unit vector
 
         angle = angle_between(B1Vu, D1Vu)
-        angleDeg = angle*57.29577951326092812//1
+        angleDeg = angle * 57.29577951326092812 // 1
         # print(angleDeg)
 
-        Ux = math.cos(math.radians(bufferAngle))*100//1
-        Uy = math.sin(math.radians(bufferAngle))*100//1
+        Ux = math.cos(math.radians(bufferAngle)) * 100 // 1
+        Uy = math.sin(math.radians(bufferAngle)) * 100 // 1
         # print(Ux, Uy)
 
         cv2.line(img, (B1CX, B1CY), (D1CX, D1CY), (0, 255, 255), 2)
         cv2.line(img, (B1CX, B1CY), (B1CX - int(Ux), B1CY - int(Uy)), (255, 255, 0), 2)
         cv2.line(img, (B1CX, B1CY), (B1CX - int(Ux), B1CY + int(Uy)), (255, 255, 0), 2)
 
-
-        if(angleDeg > bufferAngle):
-            signal = "1D"                       #Turn Right
+        if angleDeg > bufferAngle:
+            signal = "1D"  # Turn Right
             sendSignal(signal)
-        elif(angleDeg <= bufferAngle):
-            signal = "1A"                       #Idle
+            p = 1
+            return p
+        elif angleDeg <= bufferAngle:
+            signal = "1A"  # Idle
             sendSignal(signal)
             p = 2
+            return p
 
     # BOT1 moving forward towards D1
-    elif(p == 2):
+    if operationNo == 2:
 
         cv2.line(img, (B1CX, B1CY), (D1CX, D1CY), (0, 255, 255), 2)
         # cv2.line(img, (D1CX - buffer, D1CY - buffer), (D1CX + buffer, D1CY - buffer), (255, 255, 0), 2)
@@ -450,44 +484,61 @@ def runLogicBOT1(img, p):
         cv2.line(img, (imgx, D1CY + buffer), (0, D1CY + buffer), (255, 255, 0), 2)
         cv2.line(img, (D1CX - buffer, imgy), (D1CX - buffer, 0), (255, 255, 0), 2)
 
-        if (B1CX < D1CX - buffer and B1CY < D1CY - buffer):
-            signal = "1J"                   # Backward-Left
+        if B1CX < D1CX - buffer and B1CY < D1CY - buffer:
+            signal = "1J"  # Backward-Left
             sendSignal(signal)
-        elif (B1CX > D1CX + buffer and B1CY < D1CY - buffer):
-            signal = "1H"                   # Forward-Left
+            p = 2
+            return p
+        elif B1CX > D1CX + buffer and B1CY < D1CY - buffer:
+            signal = "1H"  # Forward-Left
             sendSignal(signal)
-        elif (B1CX < D1CX - buffer and B1CY > D1CY + buffer):
-            signal = "1I"                   # Backward-Right
+            p = 2
+            return p
+        elif B1CX < D1CX - buffer and B1CY > D1CY + buffer:
+            signal = "1I"  # Backward-Right
             sendSignal(signal)
-        elif (B1CX > D1CX + buffer and B1CY > D1CY + buffer):
-            signal = "1G"                   # Forward-Right
+            p = 2
+            return p
+        elif B1CX > D1CX + buffer and B1CY > D1CY + buffer:
+            signal = "1G"  # Forward-Right
             sendSignal(signal)
-        elif (B1CX > D1CX - buffer and B1CX < D1CX + buffer and B1CY < D1CY - buffer):
-            signal = "1J"                   # Backward-Left
+            p = 2
+            return p
+        elif D1CX - buffer <= B1CX <= D1CX + buffer and B1CY < D1CY - buffer:
+            signal = "1J"  # Backward-Left
             sendSignal(signal)
-        elif (B1CX > D1CX - buffer and B1CX < D1CX + buffer and B1CY > D1CY + buffer):
-            signal = "1I"                   # Backward-Right
+            p = 2
+            return p
+        elif D1CX - buffer <= B1CX <= D1CX + buffer and B1CY > D1CY + buffer:
+            signal = "1I"  # Backward-Right
             sendSignal(signal)
-        elif (B1CX < D1CX - buffer and B1CY > D1CY - buffer and B1CY < D1CY + buffer):
-            signal = "1C"                    # Backward
+            p = 2
+            return p
+        elif B1CX < D1CX - buffer and D1CY - buffer <= B1CY <= D1CY + buffer:
+            signal = "1C"  # Backward
             sendSignal(signal)
-        elif (B1CX > D1CX + buffer and B1CY > D1CY - buffer and B1CY < D1CY + buffer):
-            signal = "1B"                    # Forward
+            p = 2
+            return p
+        elif B1CX > D1CX + buffer and D1CY - buffer <= B1CY <= D1CY + buffer:
+            signal = "1B"  # Forward
             sendSignal(signal)
-        elif (B1CX >= D1CX - buffer and B1CX <= D1CX + buffer and B1CY >= D1CY - buffer and B1CY <= D1CY + buffer):
-            signal = "1A"                    # Idle
+            p = 2
+            return p
+        elif D1CX - buffer <= B1CX <= D1CX + buffer and D1CY - buffer <= B1CY <= D1CY + buffer:
+            signal = "1A"  # Idle
             sendSignal(signal)
             p = 3
+            return p
 
     # BOT1 dropping package
-    elif(p == 3):
-
+    if operationNo == 3:
         signal = "1F"
         sendSignal(signal)
         p = 4
+        return p
 
     # BOT1 moving backwards towards T1
-    elif(p == 4):
+    if operationNo == 4:
 
         cv2.line(img, (B1CX, B1CY), (T1CX, T1CY), (0, 255, 255), 2)
         # cv2.line(img, (T1CX - buffer, T1CY - buffer), (T1CX + buffer, T1CY - buffer), (255, 255, 0), 2)
@@ -500,37 +551,54 @@ def runLogicBOT1(img, p):
         cv2.line(img, (imgx, T1CY + buffer), (0, T1CY + buffer), (255, 255, 0), 2)
         cv2.line(img, (T1CX - buffer, imgy), (T1CX - buffer, 0), (255, 255, 0), 2)
 
-        if (B1CX < T1CX - buffer and B1CY < T1CY - buffer):
+        if B1CX < T1CX - buffer and B1CY < T1CY - buffer:
             signal = "1J"  # Backward-Left
             sendSignal(signal)
-        elif (B1CX > T1CX + buffer and B1CY < T1CY - buffer):
+            p = 4
+            return p
+        elif B1CX > T1CX + buffer and B1CY < T1CY - buffer:
             signal = "1H"  # Forward-Left
             sendSignal(signal)
-        elif (B1CX < T1CX - buffer and B1CY > T1CY + buffer):
+            p = 4
+            return p
+        elif B1CX < T1CX - buffer and B1CY > T1CY + buffer:
             signal = "1I"  # Backward-Right
             sendSignal(signal)
-        elif (B1CX > T1CX + buffer and B1CY > T1CY + buffer):
+            p = 4
+            return p
+        elif B1CX > T1CX + buffer and B1CY > T1CY + buffer:
             signal = "1G"  # Forward-Right
             sendSignal(signal)
-        elif (B1CX > T1CX - buffer and B1CX < T1CX + buffer and B1CY < T1CY - buffer):
+            p = 4
+            return p
+        elif T1CX - buffer <= B1CX <= T1CX + buffer and B1CY < T1CY - buffer:
             signal = "1H"  # Forward-Left
             sendSignal(signal)
-        elif (B1CX > T1CX - buffer and B1CX < T1CX + buffer and B1CY > T1CY + buffer):
+            p = 4
+            return p
+        elif T1CX - buffer <= B1CX <= T1CX + buffer and B1CY > T1CY + buffer:
             signal = "1G"  # Forward-Right
             sendSignal(signal)
-        elif (B1CX < T1CX - buffer and B1CY > T1CY - buffer and B1CY < T1CY + buffer):
+            p = 4
+            return p
+        elif B1CX < T1CX - buffer and T1CY - buffer <= B1CY <= T1CY + buffer:
             signal = "1C"  # Backward
             sendSignal(signal)
-        elif (B1CX > T1CX + buffer and B1CY > T1CY - buffer and B1CY < T1CY + buffer):
+            p = 4
+            return p
+        elif B1CX > T1CX + buffer and T1CY - buffer <= B1CY <= T1CY + buffer:
             signal = "1B"  # Forward
             sendSignal(signal)
-        elif (B1CX >= T1CX - buffer and B1CX <= T1CX + buffer and B1CY >= T1CY - buffer and B1CY <= T1CY + buffer):
+            p = 4
+            return p
+        elif T1CX - buffer <= B1CX <= T1CX + buffer and T1CY - buffer <= B1CY <= T1CY + buffer:
             signal = "1A"  # Idle
             sendSignal(signal)
             p = 5
+            return p
 
     #  BOT1 moving turning at T1 towards S1
-    elif(p == 5):
+    if operationNo == 5:
 
         B1Vu = unit_vector(B1V)  # Making into unit vector
         S1Vu = unit_vector(S1V)  # Making into unit vector
@@ -547,16 +615,19 @@ def runLogicBOT1(img, p):
         cv2.line(img, (B1CX, B1CY), (B1CX + int(Uy), B1CY + int(Ux)), (255, 255, 0), 2)
         cv2.line(img, (B1CX, B1CY), (B1CX - int(Uy), B1CY + int(Ux)), (255, 255, 0), 2)
 
-        if (angleDeg > bufferAngle):
+        if angleDeg > bufferAngle:
             signal = "1E"  # Turn Left
             sendSignal(signal)
-        elif (angleDeg <= bufferAngle):
+            p = 5
+            return p
+        elif angleDeg <= bufferAngle:
             signal = "1A"  # Idle
             sendSignal(signal)
             p = 6
+            return p
 
     # BOT1 moving backwards towards S1
-    elif(p == 6):
+    if operationNo == 6:
 
         cv2.line(img, (B1CX, B1CY), (S1CX, S1CY), (0, 255, 255), 2)
         # cv2.line(img, (S1CX - buffer, S1CY - buffer), (S1CX + buffer, S1CY - buffer), (255, 255, 0), 2)
@@ -569,40 +640,52 @@ def runLogicBOT1(img, p):
         cv2.line(img, (imgx, S1CY + buffer), (0, S1CY + buffer), (255, 255, 0), 2)
         cv2.line(img, (S1CX - buffer, imgy), (S1CX - buffer, 0), (255, 255, 0), 2)
 
-        if (B1CX < S1CX - buffer and B1CY < S1CY - buffer):
+        if B1CX < S1CX - buffer and B1CY < S1CY - buffer:
             signal = "1H"  # Forward-Left
             sendSignal(signal)
-        elif (B1CX > S1CX + buffer and B1CY < S1CY - buffer):
+            p = 6
+            return p
+        elif B1CX > S1CX + buffer and B1CY < S1CY - buffer:
             signal = "1G"  # Forward-Right
             sendSignal(signal)
-        elif (B1CX < S1CX - buffer and B1CY > S1CY + buffer):
+            p = 6
+            return p
+        elif B1CX < S1CX - buffer and B1CY > S1CY + buffer:
             signal = "1J"  # Backward-Left
             sendSignal(signal)
-        elif (B1CX > S1CX + buffer and B1CY > S1CY + buffer):
+            p = 6
+            return p
+        elif B1CX > S1CX + buffer and B1CY > S1CY + buffer:
             signal = "1I"  # Backward-Right
             sendSignal(signal)
-        elif (B1CX > S1CX - buffer and B1CX < S1CX + buffer and B1CY < S1CY - buffer):
+            p = 6
+            return p
+        elif S1CX - buffer <= B1CX <= S1CX + buffer and B1CY < S1CY - buffer:
             signal = "1B"  # Forward
             sendSignal(signal)
-        elif (B1CX > S1CX - buffer and B1CX < S1CX + buffer and B1CY > S1CY + buffer):
+            p = 6
+            return p
+        elif S1CX - buffer <= B1CX <= S1CX + buffer and B1CY > S1CY + buffer:
             signal = "1C"  # Backward
             sendSignal(signal)
-        elif (B1CX < S1CX - buffer and B1CY > S1CY - buffer and B1CY < S1CY + buffer):
+            p = 6
+            return p
+        elif B1CX < S1CX - buffer and S1CY - buffer <= B1CY <= S1CY + buffer:
             signal = "1G"  # Forward-Left
             sendSignal(signal)
-        elif (B1CX > S1CX + buffer and B1CY > S1CY - buffer and B1CY < S1CY + buffer):
+            p = 6
+            return p
+        elif B1CX > S1CX + buffer and S1CY - buffer <= B1CY <= S1CY + buffer:
             signal = "1G"  # Forward-Right
             sendSignal(signal)
-        elif (B1CX >= S1CX - buffer and B1CX <= S1CX + buffer and B1CY >= S1CY - buffer and B1CY <= S1CY + buffer):
+            p = 6
+            return p
+        elif S1CX - buffer <= B1CX <= S1CX + buffer and S1CY - buffer <= B1CY <= S1CY + buffer:
             signal = "1A"  # Idle
             sendSignal(signal)
             p = 7
-            BOT = "BOT2"
-
-
-
-
-
+            return p
+            # BOT = "BOT2"
 
 
 def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
@@ -623,13 +706,11 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
         c2 = (b[0][1][0], b[0][1][1])
         c3 = (b[0][2][0], b[0][2][1])
         c4 = (b[0][3][0], b[0][3][1])
-        v = (int(c1[0])-int(c4[0]), int(c1[1])-int(c4[1]))
+        v = (int(c1[0]) - int(c4[0]), int(c1[1]) - int(c4[1]))
         vx = int(c1[0]) - int(c4[0])
         vy = int(c1[1]) - int(c4[1])
         x = int((c1[0] + c2[0] + c3[0] + c4[0]) / 4)
         y = int((c1[1] + c2[1] + c3[1] + c4[1]) / 4)
-
-
 
         # print(ids[i], v)
         # print(c1)
@@ -678,29 +759,30 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
         cv2.line(img, (int(c2[0]), int(c2[1])), (int(c3[0]), int(c3[1])), (0, 255, 0), 2)
         cv2.line(img, (int(c3[0]), int(c3[1])), (int(c4[0]), int(c4[1])), (0, 255, 0), 2)
         cv2.line(img, (int(c4[0]), int(c4[1])), (int(c1[0]), int(c1[1])), (0, 255, 0), 2)
-        cv2.line(img, (x, y), (x+(int(v[0])//2), y+(int(v[1])//2)), (255, 0, 0), 2)
-        img = cv2.putText(img, arg2, (x-10, y+20), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-
-
+        cv2.line(img, (x, y), (x + (int(v[0]) // 2), y + (int(v[1]) // 2)), (255, 0, 0), 2)
+        img = cv2.putText(img, arg2, (x - 10, y + 20), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
 
 VIDEO_TYPE = {
     'avi': cv2.VideoWriter_fourcc(*'XVID')
 }
 
+
 def get_video_type(filename):
-    filename,ext = os.path.splitext(filename)
+    filename, ext = os.path.splitext(filename)
     if ext in VIDEO_TYPE:
         return VIDEO_TYPE[ext]
     return VIDEO_TYPE['avi']
 
 
-
 def main():
     cap = cv2.VideoCapture(0)
-    dims = get_dims(cap, res= my_res)
+    dims = get_dims(cap, res=my_res)
     video_type_cv2 = get_video_type(filename)
 
+    global p
+    p = 0
+    operationNo = 0
 
     # rec = cv2.VideoWriter(filename,video_type_cv2, fps, dims)
 
@@ -712,11 +794,14 @@ def main():
         imgx = img.shape[1]
         imgy = img.shape[0]
 
-
         findArucoMarkers(img)
 
         if BOT == "BOT1":
-            runLogicBOT1(img, p)
+            p = runLogicBOT1(img, p, operationNo)
+
+        operationNo = p
+
+        print(p, operationNo)
 
         # rec.write(img)
         cv2.imshow("Image", img)
@@ -728,6 +813,7 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     main()
