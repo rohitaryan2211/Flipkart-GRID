@@ -1,2 +1,2 @@
 # Flipkart-GRID
-Codes for Flipkart GRID challenge
+Code for Flipkart GRID robotics challenge

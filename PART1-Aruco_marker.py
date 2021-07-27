@@ -1767,6 +1767,9 @@ def runLogicBOT4(img, p, operationNo, q):
 
 def countdown():
     elapsed_time = time.time() - start_time
+    global elapsed_time_min
+    global elapsed_time_sec
+    global elapsed_time_millisec
     elapsed_time_min = elapsed_time // 60
     elapsed_time_sec = elapsed_time % 60
     elapsed_time_millisec = ((elapsed_time_sec * 1000) % 1000) // 1
@@ -1786,6 +1789,11 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
         cv2.rectangle(img, (imgx - 190, 20), (imgx - 10, 60), color=(255, 255, 255), thickness=2)
         image = cv2.putText(img, "00:00:000", (imgx - 180, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
                             cv2.LINE_AA)
+    elif BOT == "BOTend":
+        cv2.rectangle(img, (imgx - 190, 20), (imgx - 10, 60), color=(255, 255, 255), thickness=2)
+        image = cv2.putText(img,
+                            f"{int(elapsed_time_min):02d}:{int(elapsed_time_sec):02d}:{int(elapsed_time_millisec):03d}",
+                            (imgx - 180, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
     else:
         cv2.rectangle(img, (imgx - 190, 20), (imgx - 10, 60), color=(255, 255, 255), thickness=2)
         image = cv2.putText(img, countdown(), (imgx - 180, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
@@ -1869,11 +1877,19 @@ def get_video_type(filename):
     return VIDEO_TYPE['avi']
 
 
-def runBOTstart(q):
+def runBOTstart(p, q):
     if cv2.waitKey(10) & 0xFF == ord('l'):
         global start_time
         start_time = time.time()
+        p = 0
         q = "BOT1"
+
+    return p, q
+
+
+def runBOTend(q):
+    if cv2.waitKey(10) & 0xFF == ord('b'):
+        q = "BOTend"
 
     return q
 
@@ -1901,8 +1917,13 @@ def main():
 
         findArucoMarkers(img)
 
+        q = runBOTend(q)
+
+        operationNo = p
+        BOT = q
+
         if BOT == "BOTstart":
-            q = runBOTstart(q)
+            p, q = runBOTstart(p, q)
         if BOT == "BOT1":
             p, q = runLogicBOT1(img, p, operationNo, q)
         if BOT == "BOT2":
