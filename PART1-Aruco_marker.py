@@ -3,6 +3,7 @@ import numpy as np
 import cv2.aruco as aruco
 import os
 import math
+import time
 from numpy import linalg
 
 filename = 'Test.avi'
@@ -980,7 +981,7 @@ def runLogicBOT2(img, p, operationNo, q):
 
         angle = angle_between(B2Vu, S2Vu)
         angleDeg = angle * 57.29577952326092822 // 2
-        print(angleDeg)
+        # print(angleDeg)
 
         Ux = math.cos(math.radians(bufferAngle)) * 100 // 1
         Uy = math.sin(math.radians(bufferAngle)) * 100 // 1
@@ -1071,6 +1072,7 @@ def runLogicBOT2(img, p, operationNo, q):
             q = "BOT3"
             return p, q
 
+
 def runLogicBOT3(img, p, operationNo, q):
     # BOT3 moving forward towards T3
     if operationNo == 0:
@@ -1148,7 +1150,7 @@ def runLogicBOT3(img, p, operationNo, q):
 
         angle = angle_between(B3Vu, D3Vu)
         angleDeg = angle * 57.29577952326092822 // 1
-        print(angleDeg)
+        # print(angleDeg)
 
         Ux = math.cos(math.radians(bufferAngle)) * 100 // 1
         Uy = math.sin(math.radians(bufferAngle)) * 100 // 1
@@ -1325,7 +1327,7 @@ def runLogicBOT3(img, p, operationNo, q):
 
         angle = angle_between(B3Vu, S3Vu)
         angleDeg = angle * 57.29577952326092822 // 1
-        print(angleDeg)
+        # print(angleDeg)
 
         Ux = math.cos(math.radians(bufferAngle)) * 100 // 1
         Uy = math.sin(math.radians(bufferAngle)) * 100 // 1
@@ -1415,6 +1417,7 @@ def runLogicBOT3(img, p, operationNo, q):
             p = 0
             q = "BOT4"
             return p, q
+
 
 def runLogicBOT4(img, p, operationNo, q):
     # BOT4 moving forward towards T4
@@ -1670,7 +1673,7 @@ def runLogicBOT4(img, p, operationNo, q):
 
         angle = angle_between(B4Vu, S4Vu)
         angleDeg = angle * 57.29577952326092822 // 1
-        print(angleDeg)
+        # print(angleDeg)
 
         Ux = math.cos(math.radians(bufferAngle)) * 100 // 1
         Uy = math.sin(math.radians(bufferAngle)) * 100 // 1
@@ -1762,6 +1765,13 @@ def runLogicBOT4(img, p, operationNo, q):
             return p, q
 
 
+def countdown():
+    elapsed_time = time.time() - start_time
+    elapsed_time_min = elapsed_time // 60
+    elapsed_time_sec = elapsed_time % 60
+    elapsed_time_millisec = ((elapsed_time_sec * 1000) % 1000) // 1
+
+    return f"{int(elapsed_time_min):02d}:{int(elapsed_time_sec):02d}:{int(elapsed_time_millisec):03d}"
 
 
 def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
@@ -1771,7 +1781,15 @@ def findArucoMarkers(img, MarkerSize=5, totalMarkers=250, draw=True):
     arucoParam = aruco.DetectorParameters_create()
     corners, ids, rejected = aruco.detectMarkers(imgGray, arucoDict, parameters=arucoParam)
     # print(ids)
-    # cv2.rectangle(imgGray, (10, 10), (100, 100), color=(255, 0, 0), thickness=3)
+
+    if BOT == "BOTstart":
+        cv2.rectangle(img, (imgx - 190, 20), (imgx - 10, 60), color=(255, 255, 255), thickness=2)
+        image = cv2.putText(img, "00:00:000", (imgx - 180, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                            cv2.LINE_AA)
+    else:
+        cv2.rectangle(img, (imgx - 190, 20), (imgx - 10, 60), color=(255, 255, 255), thickness=2)
+        image = cv2.putText(img, countdown(), (imgx - 180, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2,
+                            cv2.LINE_AA)
 
     if draw:
         aruco.drawDetectedMarkers(img, corners)
@@ -1851,15 +1869,25 @@ def get_video_type(filename):
     return VIDEO_TYPE['avi']
 
 
+def runBOTstart(q):
+    if cv2.waitKey(10) & 0xFF == ord('l'):
+        global start_time
+        start_time = time.time()
+        q = "BOT1"
+
+    return q
+
+
 def main():
     cap = cv2.VideoCapture(0)
     dims = get_dims(cap, res=my_res)
     video_type_cv2 = get_video_type(filename)
 
-    p = 6
-    operationNo = 6
-    BOT = "BOT4"
-    q = "BOT4"
+    p = 0
+    operationNo = 0
+    global BOT
+    BOT = "BOTstart"
+    q = "BOTstart"
 
     # rec = cv2.VideoWriter(filename,video_type_cv2, fps, dims)
 
@@ -1873,6 +1901,8 @@ def main():
 
         findArucoMarkers(img)
 
+        if BOT == "BOTstart":
+            q = runBOTstart(q)
         if BOT == "BOT1":
             p, q = runLogicBOT1(img, p, operationNo, q)
         if BOT == "BOT2":
@@ -1883,7 +1913,6 @@ def main():
             p, q = runLogicBOT4(img, p, operationNo, q)
         if BOT == "BOTend":
             pass
-
 
         operationNo = p
         BOT = q
